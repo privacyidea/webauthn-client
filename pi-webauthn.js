@@ -392,7 +392,7 @@ var pi_webauthn = navigator.credentials ? window.pi_webauthn || {} : null;
             timeout: webAuthnRegisterRequest.timeout || 60000,
             attestation: webAuthnRegisterRequest.attestation || "direct",
             extensions: {}
-        };
+        }
         if (webAuthnRegisterRequest.alternativeAlgorithm) {
             publicKeyCredentialCreationOptions.pubKeyCredParams.push(
                 webAuthnRegisterRequest.alternativeAlgorithm);
@@ -405,6 +405,17 @@ var pi_webauthn = navigator.credentials ? window.pi_webauthn || {} : null;
             publicKeyCredentialCreationOptions.extensions.authnSel
                 = webAuthnRegisterRequest.authenticatorSelectionList
         }
+        if (webAuthnRegisterRequest.excludeCredentials) {
+            publicKeyCredentialCreationOptions.excludeCredentials
+                = webAuthnRegisterRequest.excludeCredentials.map(function (x) {
+                    return {
+                        id: webAuthnBase64DecToArr(x.id),
+                        transports: x.transports,
+                        type: x.type
+                    }
+                });
+        }
+
 
         return navigator
             .credentials

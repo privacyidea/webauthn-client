@@ -362,8 +362,7 @@ var pi_webauthn = navigator.credentials ? window.pi_webauthn || {} : null;
      * @property {string} displayName - The full name of the user the token is being enrolled for.
      * @property {string} nonce - The challenge to use when creating the token.
      * @property {PublicKeyCredentialRpEntity} relyingParty - The relyingParty to use for the credential.
-     * @property {PublicKeyCredentialParameters} preferredAlgorithm - The preferred algorithm for credential creation.
-     * @property {PublicKeyCredentialParameters} [alternativeAlgorithm] - An array of alternative algorithms.
+     * @property {PublicKeyCredentialParameters} pubKeyCredAlgorithms - The preferred algorithm for credential creation.
      * @property {AuthenticatorSelectionCriteria} [authenticatorSelection] - Selection criteria for authenticators.
      * @property {number} [timeout=60000] - Timeout in milliseconds.
      * @property {AttestationConveyancePreference} [attestation="direct"] - Option to discourage or require attestation.
@@ -388,17 +387,11 @@ var pi_webauthn = navigator.credentials ? window.pi_webauthn || {} : null;
                 name: webAuthnRegisterRequest.name,
                 displayName: webAuthnRegisterRequest.displayName
             },
-            pubKeyCredParams: [webAuthnRegisterRequest.preferredAlgorithm],
+            pubKeyCredParams: webAuthnRegisterRequest.pubKeyCredAlgorithms,
             timeout: webAuthnRegisterRequest.timeout || 60000,
             attestation: webAuthnRegisterRequest.attestation || "direct",
             extensions: {}
         };
-        if (webAuthnRegisterRequest.alternativeAlgorithm
-            && Array.isArray(webAuthnRegisterRequest.alternativeAlgorithm)) {
-            publicKeyCredentialCreationOptions.pubKeyCredParams
-                = publicKeyCredentialCreationOptions.pubKeyCredParams.concat(
-                    webAuthnRegisterRequest.alternativeAlgorithm);
-        }
         if (webAuthnRegisterRequest.authenticatorSelection) {
             publicKeyCredentialCreationOptions.authenticatorSelection
                 = webAuthnRegisterRequest.authenticatorSelection;

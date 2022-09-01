@@ -133,7 +133,7 @@ var pi_webauthn = navigator.credentials ? window.pi_webauthn || {} : null;
     /**
      * Encode a binary into base64.
      *
-     * This will take a binary ArrrayBufferLike and encode it into base64.
+     * This will take a binary ArrayBufferLike and encode it into base64.
      *
      * Adapted from Base64 / binary data / UTF-8 strings utilities (#2)
      *
@@ -362,8 +362,7 @@ var pi_webauthn = navigator.credentials ? window.pi_webauthn || {} : null;
      * @property {string} displayName - The full name of the user the token is being enrolled for.
      * @property {string} nonce - The challenge to use when creating the token.
      * @property {PublicKeyCredentialRpEntity} relyingParty - The relyingParty to use for the credential.
-     * @property {PublicKeyCredentialParameters} preferredAlgorithm - The preferred algorithm for credential creation.
-     * @property {PublicKeyCredentialParameters} [alternativeAlgorithm] - An alternative algorithm.
+     * @property {PublicKeyCredentialParameters} pubKeyCredAlgorithms - The preferred algorithm for credential creation.
      * @property {AuthenticatorSelectionCriteria} [authenticatorSelection] - Selection criteria for authenticators.
      * @property {number} [timeout=60000] - Timeout in milliseconds.
      * @property {AttestationConveyancePreference} [attestation="direct"] - Option to discourage or require attestation.
@@ -388,15 +387,11 @@ var pi_webauthn = navigator.credentials ? window.pi_webauthn || {} : null;
                 name: webAuthnRegisterRequest.name,
                 displayName: webAuthnRegisterRequest.displayName
             },
-            pubKeyCredParams: [webAuthnRegisterRequest.preferredAlgorithm],
+            pubKeyCredParams: webAuthnRegisterRequest.pubKeyCredAlgorithms,
             timeout: webAuthnRegisterRequest.timeout || 60000,
             attestation: webAuthnRegisterRequest.attestation || "direct",
             extensions: {}
-        }
-        if (webAuthnRegisterRequest.alternativeAlgorithm) {
-            publicKeyCredentialCreationOptions.pubKeyCredParams.push(
-                webAuthnRegisterRequest.alternativeAlgorithm);
-        }
+        };
         if (webAuthnRegisterRequest.authenticatorSelection) {
             publicKeyCredentialCreationOptions.authenticatorSelection
                 = webAuthnRegisterRequest.authenticatorSelection;
